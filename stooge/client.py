@@ -18,7 +18,8 @@ def scan():
     client = MongoClient()
     db = client.stooge
 
-    scan = {"created": datetime.datetime.utcnow(),
+    scan = {"tags": [],
+            "created": datetime.datetime.utcnow(),
             "state": "CREATED",
             "started": None,
             "finished": None,
