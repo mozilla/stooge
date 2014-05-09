@@ -16,6 +16,7 @@ import requests
 
 from stooge.frontend.persona import verify_assertion
 from stooge.frontend import app
+from stooge.frontend.mozillians import lookup_mozillian
 
 client = MongoClient()
 users = client.stooge.users
@@ -45,7 +46,9 @@ def persona_login():
     if not receipt:
         return jsonify(success=False)
     if not receipt['email'].endswith('@mozilla.com') and not receipt['email'].endswith('@mozillafoundation.org'):
-        return jsonify(success=False, error="only-mozilla")
+        mozillian = lookup_mozillian(app.config["MOZILLIANS_APP_NAME"], app.config["MOZILLIANS_APP_KEY"], receipt['email'])
+        if not mozillian or not mozillian['is_vouched']:
+            return jsonify(success=False, error="only-mozilla")
     session['email'] = receipt['email']
     users.update({"email":receipt["email"]}, {"email":receipt["email"], "last_login": datetime.datetime.utcnow()}, upsert=True)
     return jsonify(success=True, email=receipt['email'])

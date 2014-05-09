@@ -8,16 +8,10 @@ app = Flask(__name__);
 from stooge.frontend import views
 from stooge.frontend.util import CustomJSONEncoder
 
-def configure_app(app, production=True, debug=True):
+def configure_app(app, filename):
     app.json_encoder = CustomJSONEncoder
-    app.debug = debug
-    app.use_evalex = False
-    if production:
-        raise Exception("TODO")
-        #config = frontend_config()
-        #if config.get('session-secret') is None:
-        #    raise Exception("Configure a sesssion-secret in the configuration for production usage")
-        #app.secret_key = config.get('session-secret')
+    if not filename:
+        app.config.from_object('stooge.frontend.config.DefaultConfig')
     else:
-        app.secret_key =  "ThisIsOnlyForDevelopmentMode"
+        app.config.from_pyfile(filename)
     return app
