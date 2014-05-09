@@ -13,12 +13,14 @@ from stooge.scanner.celery import celery
 from stooge.scanner.tasks import start_scan, finish_scan, execute_scan
 
 
-def scan():
+def scan(tags=None):
 
     client = MongoClient()
     db = client.stooge
 
-    scan = {"tags": [],
+    scan_tags = tags if tags is not None else []
+
+    scan = {"tags": scan_tags,
             "created": datetime.datetime.utcnow(),
             "state": "CREATED",
             "started": None,

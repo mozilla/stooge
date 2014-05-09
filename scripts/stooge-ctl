@@ -5,11 +5,21 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/
 
 
+import argparse
 import sys
 
 from stooge.client import scan
 
-
 if __name__ == "__main__":
-    if sys.argv[1] == "scan":
-        scan()
+
+    def _scan(args):
+        scan(tags=args.tag)
+
+    parser = argparse.ArgumentParser(prog='stooge-ctl')
+    sub_parsers = parser.add_subparsers()
+    scan_parser = sub_parsers.add_parser('scan')
+    scan_parser.add_argument('-t', '--tag', help="tag to add to the scan", action="append", default=[])
+    scan_parser.set_defaults(func=_scan)
+
+    args = parser.parse_args()
+    args.func(args)
