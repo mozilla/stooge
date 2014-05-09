@@ -13,12 +13,13 @@ from stooge.client import scan
 if __name__ == "__main__":
 
     def _scan(args):
-        scan(tags=args.tag)
+        scan(tags=args.tag, random_selection=args.random)
 
     parser = argparse.ArgumentParser(prog='stooge-ctl')
     sub_parsers = parser.add_subparsers()
     scan_parser = sub_parsers.add_parser('scan')
     scan_parser.add_argument('-t', '--tag', help="tag to add to the scan", action="append", default=[])
+    scan_parser.add_argument('-r', '--random', action="store_true", help="pick some random sites (for testing)")
     scan_parser.set_defaults(func=_scan)
 
     args = parser.parse_args()

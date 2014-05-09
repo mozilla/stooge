@@ -4,6 +4,7 @@
 
 
 import datetime
+import random
 
 from celery.execute import send_task
 from pymongo import MongoClient
@@ -13,7 +14,7 @@ from stooge.scanner.celery import celery
 from stooge.scanner.tasks import start_scan, finish_scan, execute_scan
 
 
-def scan(tags=None):
+def scan(tags=None, random_selection=False):
 
     client = MongoClient()
     db = client.stooge
@@ -27,7 +28,12 @@ def scan(tags=None):
             "finished": None,
             "sites": []}
 
-    for site in db.sites.find():
+    sites = list(db.sites.find())
+    if random_selection:
+        random.shuffle(sites)
+        sites = sites[:10]
+
+    for site in sites:
         scan["sites"].append({"_id": site["_id"],
                               "responses": {"http":[], "https":[]},
                               "results": {},
