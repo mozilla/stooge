@@ -1,0 +1,59 @@
+
+<div ng-if="loading">
+  <h3>Loading bugs .. this can take a little while</h3>
+</div>
+
+<div ng-if="!loading" class="container">
+
+  <!--
+  <ul class="nav nav-pills pull-left">
+    <li ng-class="{active: filterName == 'all'}">
+      <a href="" ng-click="filter('all')">All Sites</a>
+    </li>
+    <li ng-class="{active: filterName == 'moco'}">
+      <a href="" ng-click="filter('moco')">MoCo Sites</a>
+    </li>
+    <li ng-class="{active: filterName == 'mofo'}">
+      <a href="" ng-click="filter('mofo')">MoFo Sites</a>
+    </li>
+    <li ng-class="{active: filterName == 'thirdparty'}">
+      <a href="" ng-click="filter('thirdparty')">Third-Party Sites</a>
+    </li>
+  </ul>
+  -->
+
+  <ul class="nav nav-pills pull-right">
+    <li ng-class="{active: sortName == 'count'}">
+      <a href="" ng-click="sort('count')">Sort by Count</a>
+    </li>
+    <li ng-class="{active: sortName == 'age'}">
+      <a href="" ng-click="sort('age')">Sort by Age</a>
+    </li>
+    <li ng-class="{active: sortName == 'name'}">
+      <a href="" ng-click="sort('name')">Sort by Name</a>
+    </li>
+  </ul>
+</div>
+
+<div ng-if="!loading" class="container">
+
+  <h3>Showing {{sites.length}} sites with {{sitesBugCount}} open web security bugs</h3>
+
+  <p>This is a live query on Bugzilla. If you cannot see the bug details and you think you should then shoot an email to <a href="mailto:security@mozilla.org">security@mozilla.org</a> to get you added to the right bug group.</p>
+
+  <div ng-repeat="site in sites">
+    <h4  class="stooge-bug-list-title site-title-big">{{site.name}} <span class="label label-{{site.averageAgeLabel}} pull-right">{{site.averageAge}} days</span>  </h4>
+    <ul class="stooge-bug-list">
+      <li ng-repeat="bug in site.bugs" class="stooge-bug-list-item">
+        <i class="icon-user" ng-if="bug.isAssigned"/>
+        <i class="icon-user icon-muted" ng-if="!bug.isAssigned"/>
+        <span class="label stooge-bug-short-status-label {{bug.status|shortBugStatusLabel}}">{{bug.status|shortBugStatus}}</span>
+        <a href="https://bugzilla.mozilla.org/show_bug.cgi?id={{bug.id}}" target="_blank">
+          <span class="bug-{{bug.status}}">{{bug.id}} {{bug.summary}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+</div>

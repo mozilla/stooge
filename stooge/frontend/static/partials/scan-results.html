@@ -1,0 +1,132 @@
+
+
+    <div class="container">
+
+      <ul class="nav nav-pills pull-left">
+        <li ng-class="{active: filterOwner == 'all'}">
+          <a href="" ng-click="filterOnOwner('all')">All</a>
+        </li>
+        <li ng-class="{active: filterOwner == 'moco'}">
+          <a href="" ng-click="filterOnOwner('moco')">MoCo</a>
+        </li>
+        <li ng-class="{active: filterOwner == 'mofo'}">
+          <a href="" ng-click="filterOnOwner('mofo')">MoFo</a>
+        </li>
+        <li ng-class="{active: filterOwner == 'community'}">
+          <a href="" ng-click="filterOnOwner('community')">Community</a>
+        </li>
+        <li ng-class="{active: filterOwner == 'vendor'}">
+          <a href="" ng-click="filterOnOwner('vendor')">Vendor</a>
+        </li>
+      </ul>
+
+      <ul class="nav nav-pills pull-right">
+        <li ng-class="{active: filterType == 'all'}">
+          <a href="" ng-click="filterOnType('all')">All</a>
+        </li>
+        <li ng-class="{active: filterType == 'production'}">
+          <a  href="" ng-click="filterOnType('production')">Production</a>
+        </li>
+        <li ng-class="{active: filterType == 'staging'}">
+          <a href="" ng-click="filterOnType('staging')">Staging</a>
+        </li>
+        <li ng-class="{active: filterType == 'development'}">
+          <a href="" ng-click="filterOnType('development')">Development</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="container">
+
+      <h3>Scan results from {{scan.created | scanDate}}</h3>
+
+      <table class="table">
+        <thead>
+          <th class="shrink">site</th>
+          <th class="shrink">status</th>
+          <th class="shrink">basic checks</th>
+          <th class="shrink">csp checks</th>
+          <th class="shrink">ssl checks</th>
+          <th class="shrink">bugs</th>
+        </thead>
+        <tr ng-repeat="site in sites">
+          <td class="shrink">{{site.url}}</td>
+
+          <td>
+            <span ng-if="site.error != null" class="label label-important">ERR</span>
+            <span ng-if="site.error == null" class="label label-success">200</span>
+          </td>
+
+          <td ng-if="site.error != null" colspan="3">
+            <span>{{site.error}}</span>
+          </td>
+
+          <td ng-if="site.error == null">
+            <span ng-repeat="result in site.results.basic">
+              <span class="label {{result|testLabelClass}}">{{result | prettyTestName}}</span> &nbsp;
+            </span>
+          </td>
+
+          <td ng-if="site.error == null">
+            <span ng-repeat="result in site.results.csp">
+              <span class="label {{result|testLabelClass}}">{{result | prettyTestName}}</span> &nbsp;
+            </span>
+          </td>
+
+          <td ng-if="site.error == null">
+            <span ng-repeat="result in site.results.ssl">
+              <span class="label {{result|testLabelClass}}">{{result | prettyTestName}}</span> &nbsp;
+            </span>
+          </td>
+
+          <td ng-if="site.error == null">
+            <span ng-if="site.bugs != 0" class="label label-warning">{{site.bugs}}</span>
+          </td>
+
+        </tr>
+      </table>
+
+      <h4>Explanation of test results</h4>
+
+      <table class="table">
+        <tr>
+          <td class="shrink"><span class="label explanation-label label-info">XFO</span></td>
+          <td class="expand">Does the server send a correct X-Frame-Options header?</td>
+        </tr>
+        <tr>
+          <td class="shrink"><span class="label explanation-label label-info">XCTO</span></td>
+          <td class="expand">Does the server send a correct X-Content-Type-Options header?</td>
+        </tr>
+        <tr>
+          <td class="shrink"><span class="label explanation-label label-info">XXP</span></td>
+          <td class="expand">Does the server send a correct X-XSS-Protection header?</td>
+        </tr>
+        <tr>
+          <td class="shrink"><span class="label explanation-label label-info">ServerId</span></td>
+          <td class="expand">Does the server hide it's software version?</td>
+        </tr>
+
+        <tr>
+          <td class="shrink"><span class="label explanation-label label-info">CSP</span></td>
+          <td class="expand">Does the server send a correct Content Security Policy header?</td>
+        </tr>
+
+        <tr>
+          <td class="shrink"><span class="label explanation-label label-info">SSL</span></td>
+          <td class="expand">Does the site support SSL?</td>
+        </tr>
+        <tr>
+          <td class="shrink"><span class="label explanation-label label-info">A+</span></td>
+          <td class="expand">The (SSLLabs) rating of the site's SSL settings.</td>
+        </tr>
+        <tr>
+          <td class="shrink"><span class="label explanation-label label-info">HSTS</span></td>
+          <td class="expand">Does the server send a correct Strict-Transport Mode header?</td>
+        </tr>
+        <tr>
+          <td class="shrink"><span class="label explanation-label label-info">SSLRedirect</span></td>
+          <td class="expand">Does the server redirect to SSL?</td>
+        </tr>
+      </table>
+
+    </div>

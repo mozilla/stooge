@@ -1,0 +1,29 @@
+
+<div class="container">
+
+  <h2>Details for wiki.mozilla.org</h2>
+
+  <h3>Security issues found</h3>
+
+  ... TODO ...
+
+  <h3>Open Website Security Bugs</h3>
+
+  <ul class="stooge-bug-list">
+    <li ng-repeat="bug in bugs" class="stooge-bug-list-item">
+      <i ng-if="bug.isAssigned" class="icon-user" title="Assigned"/>
+      <i ng-if="!bug.isAssigned" class="icon-user icon-muted" title="Not Assigned"/>
+      <span class="label stooge-bug-short-status-label {{bug.status|shortBugStatusLabel}}">{{bug.status|shortBugStatus}}</span>
+      <a href="https://bugzilla.mozilla.org/show_bug.cgi?id={{bug.id}}" target="_blank">
+        <span class="bug-{{bug.status}}">{{bug.id}} {{bug.summary}}</span>
+      </a>
+    </li>
+  </ul>
+
+  <h3>ZEST Tests</h3>
+
+  <ul class="stooge-bug-list">
+    <li>No ZEST tests found.</li>
+  </ul>
+
+</div>

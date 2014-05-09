@@ -1,0 +1,84 @@
+/*
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+body {
+    padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+}
+
+.test-label-fail {
+  background-color: #b94a48;
+}
+
+.test-label-pass {
+    background-color: #468847;
+}
+
+.test-label-na {
+    background-color: #aaaaaa;
+}
+
+table td.shrink {
+    white-space:nowrap;
+}
+table td.expand {
+    width: 99%;
+}
+
+table th.shrink {
+    white-space:nowrap;
+}
+table th.expand {
+    width: 99%;
+}
+
+.ssl-grade-label-success {
+    background-color: #468847;
+    text-align: center;
+    width: 20px;
+}
+
+.ssl-grade-label-warning {
+    background-color: #f89406;
+    text-align: center;
+    width: 20px;
+}
+
+.ssl-grade-label-important {
+    background-color: #b94a48;
+    text-align: center;
+    width: 20px;
+}
+
+.ssl-grade-label-na {
+    background-color: #999999;
+    text-align: center;
+    width: 20px;
+}
+
+.explanation-label {
+  text-align: center;
+  width: 80px;
+}
+
+
+ul.stooge-bug-list {
+    list-style: none;
+}
+
+li.stooge-bug-list-item {
+    margin-bottom: 2px;
+}
+
+.stooge-bug-short-status-label {
+    width: 30px;
+    martin-right: 6px;
+    text-align: center;
+}
+
+.stooge-bug-list-title {
+    text-overflow: hidden;
+    text-transform:uppercase;
+}
