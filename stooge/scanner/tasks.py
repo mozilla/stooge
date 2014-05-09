@@ -169,8 +169,10 @@ def count_websec_bugs(bugzilla_username, bugzilla_password, site_url):
     credentials = (bugzilla_username, bugzilla_password)
 
     bug_ids = set()
-    bug_ids.add([bug['id'] for bug in _websec_bugs_via_component(credentials, url.hostname)])
-    bug_ids.add([bug['id'] for bug in _websec_bugs_via_whiteboard(credentials, url.hostname)])
+    for bug in _websec_bugs_via_component(credentials, url.hostname):
+        bug_ids.add(bug["id"])
+    for bug in _websec_bugs_via_whiteboard(credentials, url.hostname):
+        bug_ids.add(bug["id"])
 
     return len(bug_ids)
 
