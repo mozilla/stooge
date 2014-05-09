@@ -39,13 +39,6 @@ var stoogeApp = angular.module("stoogeApp", ['ngRoute', 'stoogeControllers', 'st
 // }]);
 
 stoogeApp.controller("StoogeController", function($rootScope, $scope, $http, Scan) {
-    $rootScope.signOut = function() {
-        $http.get('/logout').success(function() {
-            navigator.id.logout();
-            $location.path("/").replace();
-        });
-    };
-
     $http.get('/api/session').
         success(function(response, status, headers, config) {
             $scope.session = response.data;

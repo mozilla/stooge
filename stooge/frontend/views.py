@@ -4,9 +4,10 @@
 
 import datetime
 import os
+import os.path
 import urlparse
 
-from flask import request, session, render_template, redirect, url_for, jsonify
+from flask import request, session, render_template, redirect, url_for, jsonify, Response
 from pymongo import MongoClient, DESCENDING
 from bson.objectid import ObjectId
 
@@ -23,11 +24,26 @@ users = client.stooge.users
 scans = client.stooge.scans
 sites = client.stooge.sites
 
+
+# This is horrible. Just to be able to set a Cache-Control header on
+# static content. Look for something better.
+
+def root_dir():
+    return os.path.abspath(os.path.dirname(__file__))
+
+def get_static_file(filename):  # pragma: no cover
+    src = os.path.join(root_dir(), 'static', filename)
+    with open(src) as f:
+        return f.read()
+
+
 @app.route("/")
 def index():
     if session.get('email') is None:
         return redirect(url_for('login'))
-    return app.send_static_file('index.html')
+    content = get_static_file('index.html')
+    return Response(content, mimetype="text/html", headers={"Cache-Control":"private"})
+    #return app.send_static_file('index.html')
 
 @app.route("/login")
 def login():
@@ -38,7 +54,7 @@ def login():
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 @app.route("/persona/login", methods=["POST"])
 def persona_login():
