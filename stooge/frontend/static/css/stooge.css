@@ -82,3 +82,7 @@ li.stooge-bug-list-item {
     text-overflow: hidden;
     text-transform:uppercase;
 }
+
+.stooge-label-link:link, .stooge-label-link:visited {
+    color: #ffffff;
+}

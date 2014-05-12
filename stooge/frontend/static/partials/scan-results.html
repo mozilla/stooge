@@ -80,7 +80,7 @@
           </td>
 
           <td ng-if="site.error == null">
-            <span ng-if="site.bugs != 0" class="label label-warning">{{site.bugs}}</span>
+            <span ng-if="site.bugs != 0" class="label label-warning"><a target="_blank" class="stooge-label-link" href="{{bugzillaLink(site)}}">{{site.bugs}}</i></a></span>
           </td>
 
         </tr>
