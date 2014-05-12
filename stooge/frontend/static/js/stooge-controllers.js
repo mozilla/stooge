@@ -68,6 +68,11 @@ stoogeControllers.controller('ScanResultsController', ['$scope', '$http', 'Scan'
             var hostname = site.url.replace(/^https?:\/\//,'');
             return "https://bugzilla.mozilla.org/buglist.cgi?v4=[site%3A" + hostname + "]&f1=bug_group&o3=equals&v3=" + hostname + "&j2=OR&o1=equals&f4=status_whiteboard&query_format=advanced&f3=component&o4=substring&f2=OP&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&f5=CP&v1=websites-security";
         };
+
+        $scope.sslLabsLink = function (site) {
+            var hostname = site.url.replace(/^https?:\/\//,'');
+            return "https://www.ssllabs.com/ssltest/analyze.html?d=" + hostname;
+        }
     }]);
 
 stoogeControllers.controller('ScanDetailsController', ['$scope', 'Bugs', '$routeParams',

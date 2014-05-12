@@ -75,7 +75,8 @@
 
           <td ng-if="site.error == null">
             <span ng-repeat="result in site.results.ssl">
-              <span class="label {{result|testLabelClass}}">{{result | prettyTestName}}</span> &nbsp;
+              <span ng-if="result.name == 'ssl_grade'" class="label {{result|testLabelClass}}"><a class="stooge-label-link" href="{{sslLabsLink(site)}}" target="_blank">{{result | prettyTestName}}</a></span> &nbsp;
+              <span ng-if="result.name != 'ssl_grade'" class="label {{result|testLabelClass}}">{{result | prettyTestName}}</span> &nbsp;
             </span>
           </td>
 
