@@ -80,8 +80,6 @@ def api_scan(scan_id):
     if session.get('email') is None:
         return jsonify(success=False)
 
-    print "SCAN_ID", scan_id
-
     if scan_id == 'last':
         scan = scans.find_one({}, {"sites.responses": 0}, sort=[("created", DESCENDING)])
     else:
