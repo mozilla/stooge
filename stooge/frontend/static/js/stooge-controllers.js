@@ -33,6 +33,16 @@ stoogeControllers.controller('ScanResultsController', ['$scope', '$http', 'Scan'
             scan.sites = _.sortBy(scan.sites, sortScanSites);
             $scope.scan = scan;
             $scope.sites = scan.sites;
+
+            var owner = "all";
+            if ($scope.session.email.match(/@mozilla.com/)) {
+                owner = "moco";
+            } else if ($scope.session.email.match(/@mozillafoundation.org/)) {
+                owner = "mofo";
+            } else {
+                owner = "community";
+            }
+            $scope.filterOnOwner(owner);
         });
 
         $scope.filterOwner = "all";
