@@ -23,21 +23,6 @@ function sortScanSites (e) {
 
 var stoogeApp = angular.module("stoogeApp", ['ngRoute', 'stoogeControllers', 'stoogeServices']);
 
-// stoogeApp.config(['$routeProvider', function($routeProvider) {
-//     $routeProvider
-//         .when('/results/:scanId', {
-//             templateUrl: 'static/partials/scan-results.html',
-//             controller: 'ScanResultsController'
-//         })
-//         .when('/results/:scanId/site/:siteId', {
-//             templateUrl: 'static/partials/scan-details.html',
-//             controller: 'ScanDetailsController'
-//         })
-//         .otherwise({
-//             redirectTo: '/results/latest'
-//         });
-// }]);
-
 stoogeApp.controller("StoogeController", function($rootScope, $scope, $http, Scan) {
     $http.get('/api/session').
         success(function(response, status, headers, config) {
