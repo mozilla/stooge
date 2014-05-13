@@ -1,0 +1,7 @@
+# This is a crontab example of how to run stooge every night
+
+# If you have installed stooge globally, then you can simply do this:
+0 3 * * * stooge-ctl scan -t nightly
+
+# If you run stooge from a venv then do this:
+0 3 * * * /home/stooge/env/bin/stooge-ctl scan -t nightly
