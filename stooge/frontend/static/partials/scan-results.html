@@ -38,7 +38,7 @@
 
     <div class="container">
 
-      <h3>Scan results from {{scan.created | scanDate}}</h3>
+      <h3>Scan results from {{scan.created | scanDate}} <span ng-if="scan.state != 'FINISHED'" class="label label-warning pull-right">SCAN IN PROGRESS</span></h3>
 
       <table class="table">
         <thead>
