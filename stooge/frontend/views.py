@@ -81,7 +81,10 @@ def api_scan(scan_id):
         return jsonify(success=False)
 
     if scan_id == 'last':
-        scan = scans.find_one({"tags":"nightly"}, {"sites.responses": 0}, sort=[("created", DESCENDING)])
+        query = {"tags":"nightly"}
+        if not app.config.get("DEBUG"):
+            query["state"] = "FINISHED" # In debug mode we also show scans in progress
+        scan = scans.find_one(query, {"sites.responses": 0}, sort=[("created", DESCENDING)])
     else:
         scan = scans.find_one({"_id": ObjectId(scan_id)}, {"sites.responses": 0})
 
