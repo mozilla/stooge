@@ -3,6 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/
 
 import datetime
+import json
 import os
 import os.path
 import urlparse
@@ -10,6 +11,7 @@ import urlparse
 from flask import request, session, render_template, redirect, url_for, jsonify, Response
 from pymongo import MongoClient, DESCENDING
 from bson.objectid import ObjectId
+from werkzeug.contrib.cache import MemcachedCache
 
 from boogs import BugBuilder
 
@@ -24,6 +26,7 @@ users = client.stooge.users
 scans = client.stooge.scans
 sites = client.stooge.sites
 
+cache = MemcachedCache(['127.0.0.1:11211'])
 
 # This is horrible. Just to be able to set a Cache-Control header on
 # static content. Look for something better.
@@ -85,19 +88,23 @@ def api_scan(scan_id):
     if session.get('email') is None:
         return jsonify(success=False)
 
-    if scan_id == 'last':
-        query = {"tags":"nightly"}
-        if not app.config.get("DEBUG"):
-            query["state"] = "FINISHED" # In debug mode we also show scans in progress
-        scan = scans.find_one(query, {"sites.responses": 0}, sort=[("created", DESCENDING)])
+    cached_scan = cache.get('scan_' + scan_id)
+    if cached_scan is not None:
+        scan = json.loads(cached_scan, cls=app.json_decoder)
     else:
-        scan = scans.find_one({"_id": ObjectId(scan_id)}, {"sites.responses": 0})
-
-    # Merge in the owner and type so that we dont have to run a new scan to get those
-    for scan_site in scan["sites"]:
-        site = sites.find_one({"_id": ObjectId(scan_site["_id"])})
-        if site:
-            scan_site["owner"] = site["owner"]
-            scan_site["type"] = site["type"]
+        if scan_id == 'last':
+            query = {"tags":"nightly"}
+            if not app.config.get("DEBUG"):
+                query["state"] = "FINISHED" # In debug mode we also show scans in progress
+            scan = scans.find_one(query, {"sites.responses": 0, "sites.ssllabs": 0}, sort=[("created", DESCENDING)])
+        else:
+            scan = scans.find_one({"_id": ObjectId(scan_id)}, {"sites.responses": 0})
+        # Merge in the owner and type so that we dont have to run a new scan to get those
+        for scan_site in scan["sites"]:
+            site = sites.find_one({"_id": ObjectId(scan_site["_id"])})
+            if site:
+                scan_site["owner"] = site["owner"]
+                scan_site["type"] = site["type"]
+        cache.set('scan_' + scan_id, json.dumps(scan, cls=app.json_encoder), timeout=3600)
 
     return jsonify(success=True, data=scan)
