@@ -12,8 +12,9 @@ install_requires = [
     'celery==3.1.11',
     'pycurl==7.19.3.1',
     'pymongo==2.7',
+    'python-memcached==1.53',
     'boogs==0.1',
-    'python-memcached==1.53'
+    'ssllabs==0.1'
 ]
 
 setup(name="stooge",
