@@ -45,6 +45,11 @@ def index():
     return Response(content, mimetype="text/html", headers={"Cache-Control":"private"})
     #return app.send_static_file('index.html')
 
+@app.route("/heartbeat")
+def heartbeat():
+    client.admin.command('ping')
+    return "OK"
+
 @app.route("/login")
 def login():
     if session.get('email') is not None:
