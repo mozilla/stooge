@@ -50,7 +50,7 @@
           <th class="shrink">bugs</th>
         </thead>
         <tr ng-repeat="site in sites">
-          <td class="shrink">{{site.url}}</td>
+          <td class="shrink">{{site.url | hostname}}</td>
 
           <td>
             <span ng-if="site.error != null" class="label label-important">ERR</span>

@@ -146,3 +146,9 @@ stoogeApp.filter('shortBugStatusLabel', function() {
         return "label-default";
     };
 });
+
+stoogeApp.filter('hostname', function() {
+    return function(url) {
+        return url.replace(/^https?:\/\//,'');
+    };
+});
