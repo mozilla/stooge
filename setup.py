@@ -7,11 +7,12 @@
 from setuptools import setup
 
 install_requires = [
-    'Flask',
-    'requests',
-    'celery',
-    'pycurl',
-    'pymongo'
+    'Flask==0.10.1',
+    'requests==2.3.0',
+    'celery==3.1.11',
+    'pycurl==7.19.3.1',
+    'pymongo==2.7',
+    'boogs==0.1'
 ]
 
 setup(name="stooge",
