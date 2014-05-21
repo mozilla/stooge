@@ -22,5 +22,6 @@ setup(name="stooge",
       author="Stefan Arentz",
       author_email="sarentz@mozilla.com",
       install_requires = install_requires,
-      packages=["stooge", "stooge.scanner"],
+      packages=["stooge", "stooge.scanner", "stooge.frontend", "stooge.frontend.static", "stooge.frontend.templates"],
+      include_package_data=True,
       scripts=["scripts/stooge-web", "scripts/stooge-scanner", "scripts/stooge-ctl"])

@@ -1,0 +1,1 @@
+recursive-include stooge *.html *.js *.css *.ttf *.svg *.eot *.woff *.png *.jpg *.txt
