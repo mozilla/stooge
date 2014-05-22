@@ -20,7 +20,7 @@ from bson.objectid import ObjectId
 from stooge.scanner.celery import celery
 from stooge.scanner.checks import execute_checks_against_responses, get_result, final_response, is_https
 import stooge.curly as curly
-import stooge.scanner.ssllabs as ssllabs
+import ssllabs
 from boogs import BugBuilder
 
 #
