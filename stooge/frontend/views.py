@@ -83,28 +83,33 @@ def api_session():
         return jsonify(success=False)
     return jsonify(success=True, data={'email': session['email']})
 
+def _get_cached_scan(scan_id):
+    if not app.config.get("DEBUG"):
+        return cache.get('scan_' + scan_id)
+
 @app.route('/api/scan/<scan_id>')
 def api_scan(scan_id):
     if session.get('email') is None:
         return jsonify(success=False)
 
-    cached_scan = cache.get('scan_' + scan_id)
+    cached_scan = _get_cached_scan(scan_id)
     if cached_scan is not None:
         scan = json.loads(cached_scan, cls=app.json_decoder)
+        return jsonify(success=True, data=scan)
+
+    if scan_id == 'last':
+        query = {"tags":"nightly"}
+        if not app.config.get("DEBUG"):
+            query["state"] = "FINISHED" # In debug mode we also show scans in progress
+        scan = scans.find_one(query, {"sites.responses": 0, "sites.ssllabs": 0}, sort=[("created", DESCENDING)])
     else:
-        if scan_id == 'last':
-            query = {"tags":"nightly"}
-            if not app.config.get("DEBUG"):
-                query["state"] = "FINISHED" # In debug mode we also show scans in progress
-            scan = scans.find_one(query, {"sites.responses": 0, "sites.ssllabs": 0}, sort=[("created", DESCENDING)])
-        else:
-            scan = scans.find_one({"_id": ObjectId(scan_id)}, {"sites.responses": 0})
-        # Merge in the owner and type so that we dont have to run a new scan to get those
-        for scan_site in scan["sites"]:
-            site = sites.find_one({"_id": ObjectId(scan_site["_id"])})
-            if site:
-                scan_site["owner"] = site["owner"]
-                scan_site["type"] = site["type"]
-        cache.set('scan_' + scan_id, json.dumps(scan, cls=app.json_encoder), timeout=3600)
+        scan = scans.find_one({"_id": ObjectId(scan_id)}, {"sites.responses": 0})
+    # Merge in the owner and type so that we dont have to run a new scan to get those
+    for scan_site in scan["sites"]:
+        site = sites.find_one({"_id": ObjectId(scan_site["_id"])})
+        if site:
+            scan_site["owner"] = site["owner"]
+            scan_site["type"] = site["type"]
+    cache.set('scan_' + scan_id, json.dumps(scan, cls=app.json_encoder), timeout=3600)
 
     return jsonify(success=True, data=scan)
