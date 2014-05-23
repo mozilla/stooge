@@ -49,7 +49,7 @@ def find_site(scan, site_id):
 @celery.task
 def site_task(scan_id, site_id):
 
-    logger.info("Loading site %s" % site_id)
+    logger.debug("Loading site %s" % site_id)
 
     try:
 
@@ -105,7 +105,7 @@ def site_task(scan_id, site_id):
 @celery.task
 def check_task(scan_id, site_id):
 
-    logger.info("Checking site %s" % site_id)
+    logger.debug("Checking site %s" % site_id)
 
     try:
 
@@ -185,7 +185,7 @@ def bugcount_task(scan_id, site_id):
     if not bugzilla_username or not bugzilla_password:
         return
 
-    logger.info("Counting websec bugs for site %s" % site_id)
+    logger.debug("Counting websec bugs for site %s" % site_id)
 
     try:
 
@@ -211,7 +211,7 @@ def bugcount_task(scan_id, site_id):
 @celery.task
 def ssllabs_task(scan_id, site_id):
 
-    logger.info("Counting websec bugs for site %s" % site_id)
+    logger.debug("Counting websec bugs for site %s" % site_id)
 
     try:
 
@@ -229,7 +229,7 @@ def ssllabs_task(scan_id, site_id):
         if is_https(r):
 
             url = urlparse.urlparse(site["url"])
-            logger.info("Going to check %s with ssllabs" % url.hostname)
+            logger.debug("Going to check %s with ssllabs" % url.hostname)
 
             try:
                 results = ssllabs.assess_site(url.hostname)
@@ -247,7 +247,7 @@ def ssllabs_task(scan_id, site_id):
 @celery.task(ignore_result=True)
 def start_scan(scan_id):
 
-    logger.info("start_scan")
+    logger.debug("start_scan")
 
     scans.update({"_id": ObjectId(scan_id)},
                  {"$set": {"state": "STARTED",
@@ -256,7 +256,7 @@ def start_scan(scan_id):
 @celery.task(ignore_result=True)
 def finish_scan(scan_id):
 
-    logger.info("finish_scan")
+    logger.debug("finish_scan")
 
     scans.update({"_id": ObjectId(scan_id)},
                  {"$set": {"state": "FINISHED",
@@ -265,7 +265,7 @@ def finish_scan(scan_id):
 @celery.task(ignore_result=True)
 def execute_scan(scan_id):
 
-    logger.info("execute_scan")
+    logger.debug("execute_scan")
 
     scan = scans.find_one({"_id": ObjectId(scan_id)})
     if not scan:
