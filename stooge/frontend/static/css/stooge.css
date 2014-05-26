@@ -8,6 +8,11 @@ body {
     padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
 }
 
+html,body{
+    position: relative;
+    height: 100%;
+}
+
 .test-label-fail {
   background-color: #b94a48;
 }
@@ -74,7 +79,7 @@ li.stooge-bug-list-item {
 
 .stooge-bug-short-status-label {
     width: 30px;
-    martin-right: 6px;
+    margin-right: 6px;
     text-align: center;
 }
 
@@ -116,7 +121,7 @@ li.stooge-bug-list-item {
     background: rgb(228, 105, 105);
 }
 
-.login-container::before,.login-container::after {
+.login-container::before, .login-container::after {
     content: "";
     position: absolute;
     width: 100%;height: 100%;
@@ -134,9 +139,8 @@ li.stooge-bug-list-item {
     top: 5px;
     z-index: -2;
     -webkit-transform: rotateZ(-2deg);
-     -moz-transform: rotateZ(-2deg);
-      -ms-transform: rotateZ(-2deg);
-
+    -moz-transform: rotateZ(-2deg);
+    -ms-transform: rotateZ(-2deg);
 }
 
 .avatar{
@@ -155,4 +159,46 @@ li.stooge-bug-list-item {
 .form-box .note {
     font-size: 80%;
     padding-top: 10px;
- }
+}
+
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+    -ms-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+.fadeInUp {
+  -webkit-animation-name: fadeInUp;
+  animation-name: fadeInUp;
+}
