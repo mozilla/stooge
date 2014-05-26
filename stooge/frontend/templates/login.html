@@ -11,13 +11,30 @@
     <title>Stooge</title>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="stylesheet" href="static/css/normalize.css">
+    <link rel="stylesheet" href="static/css/bootstrap.css">
+    <link rel="stylesheet" href="static/css/font-awesome.css">
+    <link rel="stylesheet" href="static/css/stooge.css">
     <script src="https://login.persona.org/include.js"></script>
     <script src="/static/js/jquery-1.9.1.js"></script>
     <script src="/static/js/stooge-login.js"></script>
   </head>
 
   <body>
-    <p><a id="signin" href="#" data-email="{{email}}"><img src="/static/img/persona_sign_in_blue.png"/></a></p>
+
+    <div class="container">
+      <div class="login-container">
+        <div id="output"></div>
+        <!--<div class="avatar"></div>-->
+        <div class="form-box">
+          <p><b>Stooge</b> is a security dashboard that collects the daily status of all our web properties. Login with Persona to see the state of <b>CSP</b>, <b>SSL</b> and <b>common security headers</b>.</p>
+          <button id="signin" data-email="{{email}}" class="btn btn-info btn-block login" type="submit">Login with Persona</button>
+          <p class="note"><i>Please use your Mozilla, Mozilla Foundation or registered Mozillians email address to access the site.</i></p>
+        </div>
+      </div>
+    </div>
+
+    <!--<p><a id="signin" href="#" data-email="{{email}}"><img src="/static/img/persona_sign_in_blue.png"/></a></p>-->
   </body>
 
 </html>
