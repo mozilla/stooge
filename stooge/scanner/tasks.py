@@ -119,6 +119,10 @@ def check_task(scan_id, site_id):
             logger.error("Cannot find site in scan")
             return
 
+        if site.get("error"):
+            logger.debug("site has an error, skipping tests")
+            return
+
         # Execute our checks
 
         try:
@@ -223,6 +227,10 @@ def ssllabs_task(scan_id, site_id):
         site = find_site(scan, site_id)
         if not site:
             logger.error("Cannot find site in scan")
+            return
+
+        if site.get("error"):
+            logger.debug("site has an error, skipping tests")
             return
 
         r = final_response(site["responses"]["http"], site["responses"]["https"])

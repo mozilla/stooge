@@ -128,10 +128,14 @@ SSL_CHECKS = [
 
 def execute_checks_against_responses(site):
     results = {"basic":[], "csp":[], "ssl":[]}
-    for check in BASIC_CHECKS:
-        results["basic"].append({"name": check.__name__, "result": check(site, results, site["responses"]["http"], site["responses"]["https"])})
-    for check in CSP_CHECKS:
-        results["csp"].append({"name": check.__name__, "result": check(site, results, site["responses"]["http"], site["responses"]["https"])})
-    for check in SSL_CHECKS:
-        results["ssl"].append({"name": check.__name__, "result": check(site, results, site["responses"]["http"], site["responses"]["https"])})
+    if site.get("error") is None:
+        for check in BASIC_CHECKS:
+            results["basic"].append({"name": check.__name__,
+                                     "result": check(site, results, site["responses"]["http"], site["responses"]["https"])})
+        for check in CSP_CHECKS:
+            results["csp"].append({"name": check.__name__,
+                                   "result": check(site, results, site["responses"]["http"], site["responses"]["https"])})
+        for check in SSL_CHECKS:
+            results["ssl"].append({"name": check.__name__,
+                                   "result": check(site, results, site["responses"]["http"], site["responses"]["https"])})
     return results
