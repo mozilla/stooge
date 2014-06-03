@@ -82,6 +82,8 @@ stoogeApp.filter('prettyTestName', function() {
             return "CSP";
         case "csp_valid":
             return "CSP-Valid";
+        case "csp_reports":
+            return "CSP-Reports";
         case "cspro_present":
             return "CSPRO";
         case "cspro_valid":

@@ -62,20 +62,17 @@ def csp_present(site, results, http_responses, https_responses):
     r = final_response(http_responses, https_responses)
     return "content-security-policy" in r["headers"]
 
-def cspro_present(site, results, http_responses, https_responses):
-    r = final_response(http_responses, https_responses)
-    if "content-security-policy-report-only" in r["headers"]:
-        return True
-
 def csp_valid(site, results, http_responses, https_responses):
     if get_result(results, "csp", "csp_present"):
         r = final_response(http_responses, https_responses)
         parsed_csp = csp_validator.csp.validate(r["headers"]["content-security-policy"])
         return parsed_csp['valid']
 
-def cspro_valid(site, results, http_responses, https_responses):
-    if get_result(results, "csp", "cspro_present"):
-        return True # TODO
+def csp_reports(site, results, http_responses, https_responses):
+    if get_result(results, "csp", "csp_valid"):
+        r = final_response(http_responses, https_responses)
+        policy = csp_validator.csp.parse_policy(r["headers"]["content-security-policy"])
+        return 'report-uri' in policy
 
 # SSL Checks
 
@@ -118,8 +115,7 @@ BASIC_CHECKS = [
 CSP_CHECKS = [
     csp_present,
     csp_valid,
-    cspro_present,
-    cspro_valid,
+    csp_reports
 ]
 
 SSL_CHECKS = [
