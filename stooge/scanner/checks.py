@@ -4,6 +4,7 @@
 
 import urlparse
 import stooge.curly as curly
+import csp_validator.csp
 
 # Utils
 
@@ -68,7 +69,9 @@ def cspro_present(site, results, http_responses, https_responses):
 
 def csp_valid(site, results, http_responses, https_responses):
     if get_result(results, "csp", "csp_present"):
-        return True # TODO
+        r = final_response(http_responses, https_responses)
+        parsed_csp = csp_validator.csp.validate(r["headers"]["content-security-policy"])
+        return parsed_csp['valid']
 
 def cspro_valid(site, results, http_responses, https_responses):
     if get_result(results, "csp", "cspro_present"):

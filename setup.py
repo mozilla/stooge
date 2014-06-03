@@ -14,7 +14,8 @@ install_requires = [
     'pymongo==2.7',
     'python-memcached==1.53',
     'boogs==0.1',
-    'ssllabs==0.1'
+    'ssllabs==0.1',
+    'csp-validator==0.4',
 ]
 
 setup(name="stooge",
