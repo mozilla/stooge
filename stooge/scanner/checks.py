@@ -81,7 +81,7 @@ def ssl_present(site, results, http_responses, https_responses):
 
 def ssl_grade(site, results, http_responses, https_responses):
     if get_result(results, "ssl", "ssl_present") and site["ssllabs"]:
-        return site["ssllabs"]["endpoints"][0]["grade"]
+        return site["ssllabs"]["endpoints"][0]["gradePlus"]
 
 def ssl_pfs(site, results, http_responses, https_responses):
     if get_result(results, "ssl", "ssl_present") and site["ssllabs"]:
