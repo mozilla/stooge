@@ -126,15 +126,33 @@ SSL_CHECKS = [
 ]
 
 def execute_checks_against_responses(site):
-    results = {"basic":[], "csp":[], "ssl":[]}
+    results = {"basic":[], "csp":[], "ssl":[], 'score': 0}
+    WEIGHTS = {  # XXP, XCTO, Server just require to flip a switch. 1 point.
+               'xxp': 1, 'xcto': 1, 'server': 1,
+               'xfo': 2,  # may require admin to look into source code: 2 points
+               # CSP requires more work. more points.
+               'csp_present': 1, 'csp_valid': 4, 'csp_report': 1,
+               # SSL is harder than CSP, but not as hard as XFO:
+               'ssl_present': 3, 'ssl_grade': 0, 'hsts': 2, 'sslredirect': 1
+    }
+
     if site.get("error") is None:
         for check in BASIC_CHECKS:
+            basic_result = check(site, results, site["responses"]["http"], site["responses"]["https"])
+            if basic_result:
+                results['score'] += WEIGHTS[check.__name__]
             results["basic"].append({"name": check.__name__,
-                                     "result": check(site, results, site["responses"]["http"], site["responses"]["https"])})
+                                     "result": basic_result})
         for check in CSP_CHECKS:
+            csp_result = check(site, results, site["responses"]["http"], site["responses"]["https"])
+            if csp_result:
+                results['score'] += WEIGHTS[check.__name__]
             results["csp"].append({"name": check.__name__,
-                                   "result": check(site, results, site["responses"]["http"], site["responses"]["https"])})
+                                   "result": csp_result})
         for check in SSL_CHECKS:
+            ssl_result = check(site, results, site["responses"]["http"], site["responses"]["https"])
+            if ssl_result:
+                results['score'] += WEIGHTS[check.__name__]
             results["ssl"].append({"name": check.__name__,
-                                   "result": check(site, results, site["responses"]["http"], site["responses"]["https"])})
+                                   "result": ssl_result})
     return results
