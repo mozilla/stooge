@@ -1,7 +1,11 @@
-#!/bin/sh
+#!/usr/bin/env python
 
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/
 
-celery worker --app=stooge.scanner.celery:celery --loglevel=INFO --concurrency 16
+from stooge.scanner.celery import celery
+
+if __name__ == "__main__":
+    argv = ["worker", "--loglevel=INFO", "--concurrency=16"]
+    celery.worker_main(argv)
