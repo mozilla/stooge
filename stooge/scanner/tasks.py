@@ -19,6 +19,7 @@ from bson.objectid import ObjectId
 
 from stooge.scanner.celery import celery
 from stooge.scanner.checks import execute_checks_against_responses, get_result, final_response, is_https
+from stooge.scanner.cipherscan import analyze as cipherscan_analyze
 import stooge.curly as curly
 import ssllabs
 from boogs import BugBuilder
@@ -250,6 +251,44 @@ def ssllabs_task(scan_id, site_id):
 
         logger.exception("Error while running ssllabs_task")
 
+@celery.task
+def cipherscan_task(scan_id, site_id):
+
+    logger.debug("Running cipherscan against site %s" % site_id)
+
+    try:
+
+        scan = scans.find_one({"_id": ObjectId(scan_id)})
+        if not scan:
+            logger.error("Cannot load scan %s" % scan_id)
+            return
+
+        site = find_site(scan, site_id)
+        if not site:
+            logger.error("Cannot find site in scan")
+            return
+
+        if site.get("error"):
+            logger.debug("site has an error, skipping tests")
+            return
+
+        r = final_response(site["responses"]["http"], site["responses"]["https"])
+        if is_https(r):
+
+            url = urlparse.urlparse(site["url"])
+            logger.debug("Going to check %s with cipherscan" % url.hostname)
+
+            try:
+                results = cipherscan_analyze(url.hostname, path="/home/sarentz/Projects/cipherscan")
+                scans.update({"_id": ObjectId(scan_id), "sites._id": ObjectId(site_id)},
+                             {"$set": {"sites.$.cipherscan": results}})
+            except Exception as e:
+                logger.exception("Error while running cipherscan")
+
+    except Exception as e:
+
+        logger.exception("Error while running ssllabs_task")
+
 #
 
 @celery.task(ignore_result=True)
@@ -285,8 +324,9 @@ def execute_scan(scan_id):
 
     site_tasks = [site_task.si(str(scan_id), str(site["_id"])) for site in scan["sites"]]
     ssllabs_tasks = [ssllabs_task.si(str(scan_id), str(site["_id"])) for site in scan["sites"]]
+    cipherscan_tasks = [cipherscan_task.si(str(scan_id), str(site["_id"])) for site in scan["sites"]]
     check_tasks = [check_task.si(str(scan_id), str(site["_id"])) for site in scan["sites"]]
     bugcount_tasks = [bugcount_task.si(str(scan_id), str(site["_id"])) for site in scan["sites"]]
 
-    grouped_tasks = [chain(*i) for i in zip(site_tasks, ssllabs_tasks, check_tasks, bugcount_tasks)]
+    grouped_tasks = [chain(*i) for i in zip(site_tasks, ssllabs_tasks, cipherscan_tasks, check_tasks, bugcount_tasks)]
     chain(start_scan.si(scan_id), chain(*grouped_tasks), finish_scan.si(scan_id))()
