@@ -49,7 +49,7 @@
           <th class="shrink">ssl checks</th>
           <th class="shrink">bugs</th>
         </thead>
-        <tr ng-repeat="site in sites">
+        <tr ng-repeat="site in sites | orderBy: 'score'">
           <td class="shrink">{{site.url | hostname}}</td>
 
           <td>
