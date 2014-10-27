@@ -4,8 +4,21 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/
 
+import optparse
 from stooge.scanner.celery import celery
 
 if __name__ == "__main__":
-    argv = ["worker", "--loglevel=INFO", "--concurrency=16"]
-    celery.worker_main(argv)
+
+   parser = optparse.OptionParser()
+   parser.add_option("-d", "--debug", dest="debug", default=False, action="store_true")
+   parser.add_option("-n", "--numworkers", type="int", default=4)
+   parser.add_option("-c", "--configuration")
+
+   (options, args) = parser.parse_args()
+
+   loglevel = "INFO"
+   if options.debug:
+       loglevel = "DEBUG"
+
+   argv = ["worker", "--loglevel", loglevel, "--concurrency", str(options.numworkers)]
+   celery.worker_main(argv)
